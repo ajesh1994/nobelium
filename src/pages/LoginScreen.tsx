@@ -12,7 +12,7 @@ export const LoginScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <Text>Registration screen</Text>
+      <Text>Login screen</Text>
       <Button onPress={logInUser} title="Login User" />
     </View>
   );
