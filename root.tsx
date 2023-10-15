@@ -8,13 +8,14 @@ import { OnboardingScreen } from "./src/pages/OnboardingScreen";
 import { HomeScreen } from "./src/pages/HomeScreen";
 import { LandingScreen } from "./src/pages/LandingScreen";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
-import { View, StyleSheet, ActivityIndicator } from "react-native";
-
+import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
+import { RegistrationNameScreen } from "./src/pages/RegistrationNameScreen";
+import { RegistrationDobScreen } from "./src/pages/RegistrationDobScreen";
+import { RegistrationPictureUploadScreen } from "./src/pages/RegistrationPictureUploadScreen";
 export const Root = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [checking, setIsChecking] = useState(true);
   const { getItem } = useAsyncStorage("@token");
-  console.log(isLoggedIn);
 
   const Stack = createStackNavigator();
 
@@ -51,6 +52,18 @@ export const Root = () => {
             <Stack.Screen name="Register" component={RegistrationScreen} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+            <Stack.Screen
+              name="RegistrationName"
+              component={RegistrationNameScreen}
+            />
+            <Stack.Screen
+              name="RegistrationDob"
+              component={RegistrationDobScreen}
+            />
+            <Stack.Screen
+              name="RegistrationPictureUpload"
+              component={RegistrationPictureUploadScreen}
+            />
           </>
         )}
       </Stack.Navigator>

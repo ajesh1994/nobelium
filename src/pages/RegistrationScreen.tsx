@@ -5,8 +5,8 @@ export const RegistrationScreen = ({ navigation }: any) => {
     <View style={styles.container}>
       <Text>Registration screen</Text>
       <Button
-        onPress={() => navigation.navigate("Onboarding")}
-        title="Register User"
+        onPress={() => navigation.navigate("RegistrationName")}
+        title="Start Registration"
       />
     </View>
   );
