@@ -1,9 +1,11 @@
-import { StyleSheet, View, Text, Pressable, Button } from "react-native";
-import { useSharedValue, useAnimatedStyle, interpolate, withTiming } from "react-native-reanimated";
+import { StyleSheet, View, Text, Pressable, Button, Image, SafeAreaView } from "react-native";
+import { useSharedValue, useAnimatedStyle, interpolate, withTiming, combineTransition } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { user } from "../../mocks/user";
+import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 export const HomeScreen = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
@@ -39,38 +41,141 @@ export const HomeScreen = () => {
         <View>
             <View>
                 <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
-                  <Animated.View style={[Styles.front, frontStyle]}>
-                    <Text>Front View</Text>
+                  <Animated.View style={[StyleSheet.compose(Styles.cardCommon, StylesFrontCard.front), frontStyle]}>
+                    <Image source={user.pictures[0]} style={StyleSheet.compose(Styles.cardCommon, StylesFrontCard.profilePhoto)} />
+                    <View style={StylesFrontCard.profileSection}>
+                      <Text style={StylesFrontCard.profileName}>
+                        {user.firstName}, {user.age}
+                      </Text>
+                      <Text style={StylesFrontCard.profileCareer}>
+                        {user.career}
+                      </Text>
+                    </View>
                   </Animated.View>
-                  <Animated.View style={[Styles.back, backStyle]}>
-                      <Text>Back</Text>
-                  </Animated.View>
-                  <Button onPress={logout} title="LOGOUT" />
                 </Pressable>
+                  
+                <Animated.View style={[StyleSheet.compose(Styles.cardCommon, StylesBackCard.back), backStyle]}>
+                  <ScrollView>
+                    <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
+                      <Text>{user.aboutme}</Text>
+                    </Pressable>
+                  </ScrollView>
+                </Animated.View>
+                
+                <Button onPress={logout} title="LOGOUT" />
             </View>
-            
         </View>
       )
 }
 
+
 const Styles = StyleSheet.create({
-  front: {
+  cardCommon: {
     height: 400,
     width: 250,
-    backgroundColor: "#D8D9CF",
     borderRadius: 20,
-    position: "absolute",
     alignItems: "center",
     justifyContent: "center",
     backfaceVisibility: "hidden",
   },
+  front: {
+    backgroundColor: "#D8D9CF",
+    position: "absolute",
+  },
   back: {
-    height: 400,
-    width: 250,
     backgroundColor: "#FF8787",
+  },
+  profilePhoto: {
+    height: '100%',
+    width: '100%',
+  },
+  profileSection: {
+    // fontFamily: 'Courier',
+    fontWeight: 'bold',
+    fontSize: 40,
+    color: 'white',
+    // flex: 1,
+    marginHorizontal: 10,
+    marginVertical: 10,
+    // flexDirection: 'column',
+    alignSelf: 'flex-start',
+    marginTop: 'auto',
+  },
+  profileName: {
+    // fontFamily: 'Courier',
+    fontWeight: 'bold',
+    fontSize: 40,
+    color: 'white',
+    // flex: 1,
+    // flexDirection: 'column',
+    alignSelf: 'flex-start',
+    marginTop: 'auto',
+  },
+  profileCareer: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: 'white',
+    alignSelf: 'flex-start',
+    marginTop: 'auto',
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    // marginHorizontal: 20,
     borderRadius: 16,
-    backfaceVisibility: "hidden",
-    alignItems: "center",
-    justifyContent: "center",
+  },
+});
+
+
+
+const StylesFrontCard = StyleSheet.create({
+  front: {
+    backgroundColor: "#D8D9CF",
+    position: "absolute",
+  },
+  profilePhoto: {
+    height: '100%',
+    width: '100%',
+  },
+  profileSection: {
+    // fontFamily: 'Courier',
+    fontWeight: 'bold',
+    fontSize: 40,
+    color: 'white',
+    // flex: 1,
+    marginHorizontal: 10,
+    marginVertical: 10,
+    // flexDirection: 'column',
+    alignSelf: 'flex-start',
+    marginTop: 'auto',
+  },
+  profileName: {
+    // fontFamily: 'Courier',
+    fontWeight: 'bold',
+    fontSize: 40,
+    color: 'white',
+    // flex: 1,
+    // flexDirection: 'column',
+    alignSelf: 'flex-start',
+    marginTop: 'auto',
+  },
+  profileCareer: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: 'white',
+    alignSelf: 'flex-start',
+    marginTop: 'auto',
+  },
+});
+
+
+
+const StylesBackCard = StyleSheet.create({
+  back: {
+    backgroundColor: "#FF8787",
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    // marginHorizontal: 20,
+    borderRadius: 16,
   },
 });
