@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput, Image } from "react-native";
-import { user } from "../mocks/user";
+import { user } from "../mocks/user1";
 import { launchImageLibraryAsync, MediaTypeOptions } from "expo-image-picker";
 
 export const RegistrationPictureUploadScreen = ({ navigation }: any) => {

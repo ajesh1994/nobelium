@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput } from "react-native";
-import { user } from "../mocks/user";
+import { user } from "../mocks/user1";
 export const RegistrationNameScreen = ({ navigation }: any) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);

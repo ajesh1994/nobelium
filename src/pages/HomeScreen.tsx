@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { View, Text, Button, StyleSheet, Image } from "react-native";
-import { user } from "../mocks/user";
+import { user } from "../mocks/user1";
 export const HomeScreen = () => {
   const { setIsLoggedIn } = useContext(AuthContext);
   const logout = async () => {

@@ -4,7 +4,7 @@ import Animated from "react-native-reanimated";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { user } from "../../mocks/user";
+import { user } from "../../mocks/user1";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 
 export const HomeScreen = () => {

@@ -1,19 +1,19 @@
 export const user = {
-  firstName: "Jane",
-  lastName: "Doe",
-  dateOfBirth: new Date("2000-01-17T16:45:30"),
-  age: 28,
-  height: '5\'10\'\'',
-  religion: 'Hindu',
-  community: 'Tamil',
+  firstName: "Thanya",
+  lastName: "Singh",
+  dateOfBirth: new Date("1999-02-18T16:45:30"),
+  age: 29,
+  height: '5\'7\'\'',
+  religion: 'Sihk',
+  community: 'Punjabi',
   education: 'Masters',
   raisedIn: 'UK',
   pictures: [
-    require("../assets/picture1.jpeg"),
-    require("../assets/picture2.jpg"),
-    require("../assets/picture3.jpg")
+    require("../assets/User5/Picture1.avif"),
+    require("../assets/User5/Picture2.jpeg"),
+    require("../assets/User5/Picture3.jpeg")
   ],
-  career: 'Software Engineer',
+  career: 'Accountant',
   aboutme: [
     'I\'m a CEO, fairly decent skier and able to order cocktails in 3 languages. My only weakness is chocolate cherry cheesecake, and I\'m extremely judgmental when it comes to french fries',
     'I like checking out a new bar with friends, scuba diving anywhere tropical and trying a new hobby on for size. \n\nUp next: kite surfing',

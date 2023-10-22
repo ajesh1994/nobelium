@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, Button, StyleSheet, TextInput } from "react-native";
-import { user } from "../mocks/user";
+import { user } from "../mocks/user1";
 import DateTimePicker from "@react-native-community/datetimepicker";
 
 export const RegistrationDobScreen = ({ navigation }: any) => {
