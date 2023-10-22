@@ -55,11 +55,42 @@ export const HomeScreen = () => {
                 </Pressable>
                   
                 <Animated.View style={[StyleSheet.compose(Styles.cardCommon, StylesBackCard.back), backStyle]}>
-                  <ScrollView>
-                    <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
-                      <Text>{user.aboutme}</Text>
-                    </Pressable>
-                  </ScrollView>
+                  <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
+                    <ScrollView style={StylesBackCard.scrollView}>
+                      {/* A second pressable is required inside the scrollview otherwise 
+                      the scroll section is not pressable and only the section outside 
+                      the scroll section is pressable */}
+                      <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
+                        <View style={{flexDirection: 'row'}}>
+                          <View style={StylesBackCard.boxSummary}>
+                            <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Height:{"\n  "}{user.height}</Text>
+                            <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Education:{"\n  "}{user.education}</Text>
+                            <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Career:{"\n  "}{user.career}</Text>
+                          </View>
+                          <View style={StylesBackCard.boxSummary}>
+                            <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Religion:{"\n  "}{user.religion}</Text>
+                            <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Community:{"\n  "}{user.community}</Text>
+                            <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Raised:{"\n  "}{user.raisedIn}</Text>
+                          </View>
+                        </View>
+                        <View style={StylesBackCard.box}>
+                          <Text style={StylesBackCard.text}>{user.aboutme[0]}</Text>
+                        </View>
+                        <View>
+                          <Image source={user.pictures[1]} style={StylesBackCard.image} />
+                        </View>
+                        <View style={StylesBackCard.box}>
+                          <Text style={StylesBackCard.text}>{user.aboutme[1]}</Text>
+                        </View>
+                        <View style={StylesBackCard.box}>
+                          <Text style={StylesBackCard.text}>{user.aboutme[2]}</Text>
+                        </View>
+                        <View>
+                          <Image source={user.pictures[2]} style={StylesBackCard.image} />
+                        </View>
+                      </Pressable>
+                    </ScrollView>
+                  </Pressable>
                 </Animated.View>
                 
                 <Button onPress={logout} title="LOGOUT" />
@@ -71,57 +102,12 @@ export const HomeScreen = () => {
 
 const Styles = StyleSheet.create({
   cardCommon: {
-    height: 400,
-    width: 250,
+    height: 700,
+    width: 400,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
     backfaceVisibility: "hidden",
-  },
-  front: {
-    backgroundColor: "#D8D9CF",
-    position: "absolute",
-  },
-  back: {
-    backgroundColor: "#FF8787",
-  },
-  profilePhoto: {
-    height: '100%',
-    width: '100%',
-  },
-  profileSection: {
-    // fontFamily: 'Courier',
-    fontWeight: 'bold',
-    fontSize: 40,
-    color: 'white',
-    // flex: 1,
-    marginHorizontal: 10,
-    marginVertical: 10,
-    // flexDirection: 'column',
-    alignSelf: 'flex-start',
-    marginTop: 'auto',
-  },
-  profileName: {
-    // fontFamily: 'Courier',
-    fontWeight: 'bold',
-    fontSize: 40,
-    color: 'white',
-    // flex: 1,
-    // flexDirection: 'column',
-    alignSelf: 'flex-start',
-    marginTop: 'auto',
-  },
-  profileCareer: {
-    fontWeight: 'bold',
-    fontSize: 20,
-    color: 'white',
-    alignSelf: 'flex-start',
-    marginTop: 'auto',
-  },
-  scrollView: {
-    backgroundColor: 'pink',
-    // marginHorizontal: 20,
-    borderRadius: 16,
   },
 });
 
@@ -171,11 +157,42 @@ const StylesFrontCard = StyleSheet.create({
 
 const StylesBackCard = StyleSheet.create({
   back: {
-    backgroundColor: "#FF8787",
+    backgroundColor: "pink",
   },
   scrollView: {
-    backgroundColor: 'pink',
-    // marginHorizontal: 20,
-    borderRadius: 16,
+    borderRadius: 15,
   },
+  box: {
+    opacity: 0.5,
+    width: '95%',
+    minHeight: 40,
+    backgroundColor: "white",
+    borderRadius: 10,
+    alignSelf: "center",
+    justifyContent: "center",
+    margin: 10,
+  },
+  boxSummary: {
+    opacity: 0.5,
+    width: '45%',
+    height: 180,
+    minHeight: 40,
+    backgroundColor: "white",
+    borderRadius: 10,
+    justifyContent: "space-between",
+    margin: 10,
+    overflow: 'hidden'
+  },
+  text: {
+    margin: 5,
+    fontSize: 18,
+  },
+  image:{
+    width: '100%',
+    height: 700,
+    alignSelf: "center",
+    resizeMode: 'cover', 
+    backgroundColor: 'blue',
+    marginVertical: 10,
+  }
 });
