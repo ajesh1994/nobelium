@@ -10,11 +10,10 @@ import { FlatList, ScrollView } from "react-native-gesture-handler";
 export const LoadProfileCards = ({ recommendedProfiles } : { recommendedProfiles:any[] }) => {
   return recommendedProfiles.map((item, i) => {
     return (
-      <View key={i}>
-          <View>
-              <LoadProfileCard profile={item}/>
-          </View>
-      </View>
+        <Animated.View key={i}>
+            <LoadProfileCard profile={item}/>
+        </Animated.View>
+        
     );
   });
 }
@@ -65,10 +64,10 @@ const LoadProfileCard = ({ profile } : { profile:any }) => {
     // ).current;
 
       return (
-        <View>
+        <Animated.View>
           <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
-            <Animated.View style={[StyleSheet.compose(Styles.cardCommon, StylesFrontCard.front), frontStyle]}>
-              <Image source={profile.pictures[0]} style={StyleSheet.compose(Styles.cardCommon, StylesFrontCard.profilePhoto)} />
+            <Animated.View style={[Styles.cardCommon, StylesFrontCard.front, frontStyle]}>
+              <Image source={profile.pictures[0]} style={[Styles.cardCommon, StylesFrontCard.profilePhoto]} />
               <View style={StylesFrontCard.profileSection}>
                 <Text style={StylesFrontCard.profileName}>
                   {profile.firstName}, {profile.age}
@@ -80,9 +79,10 @@ const LoadProfileCard = ({ profile } : { profile:any }) => {
             </Animated.View>
           </Pressable>
             
-          <Animated.View style={[StyleSheet.compose(Styles.cardCommon, StylesBackCard.back), backStyle]}>
-            <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
-              <ScrollView style={StylesBackCard.scrollView}>
+          
+          <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
+            <Animated.View style={[Styles.cardCommon, StylesBackCard.back, backStyle]}>
+              <ScrollView style={Styles.cardCommon}>
                 {/* A second pressable is required inside the scrollview otherwise 
                 the scroll section is not pressable and only the section outside 
                 the scroll section is pressable */}
@@ -116,9 +116,9 @@ const LoadProfileCard = ({ profile } : { profile:any }) => {
                   </View>
                 </Pressable>
               </ScrollView>
-            </Pressable>
-          </Animated.View>
-        </View>
+            </Animated.View>
+          </Pressable>
+        </Animated.View>
       )
 }
 
@@ -128,8 +128,8 @@ const Styles = StyleSheet.create({
     height: 700,
     width: 400,
     borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
+    // alignItems: "center",
+    // justifyContent: "center",
     backfaceVisibility: "hidden",
   },
 });
@@ -138,7 +138,7 @@ const Styles = StyleSheet.create({
 
 const StylesFrontCard = StyleSheet.create({
   front: {
-    backgroundColor: "#D8D9CF",
+    // backgroundColor: "#D8D9CF",
     position: "absolute",
   },
   profilePhoto: {
@@ -181,9 +181,6 @@ const StylesFrontCard = StyleSheet.create({
 const StylesBackCard = StyleSheet.create({
   back: {
     backgroundColor: "pink",
-  },
-  scrollView: {
-    borderRadius: 15,
   },
   box: {
     opacity: 0.5,

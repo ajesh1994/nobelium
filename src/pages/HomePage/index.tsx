@@ -21,6 +21,5 @@ const CardFlip = () => {
       flex: 1,
       alignItems: "center",
       justifyContent: "center",
-      padding: 30,
     },
   });

@@ -24,10 +24,8 @@ export const HomeScreen = ({ profile } : { profile:any }) => {
   const recommendedProfiles = [user1]
   return (
     <View>
-        <View>
-            <LoadProfileCards recommendedProfiles={recommendedProfiles}/>
-            <Button onPress={logout} title="LOGOUT" />
-        </View>
+      <LoadProfileCards recommendedProfiles={recommendedProfiles}/>
+      <Button onPress={logout} title="LOGOUT" />
     </View>
   );
 }
