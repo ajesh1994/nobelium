@@ -1,9 +1,8 @@
-import { View, Text, StyleSheet, Dimensions, Image } from "react-native";
+import { View, StyleSheet, Dimensions, Image } from "react-native";
 
-import { useContext, useRef } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 import { user as user1 } from "../../mocks/user1";
 import { user as user2 } from "../../mocks/user2";
@@ -35,6 +34,7 @@ export const HomeScreen = () => {
 
   return (
     <View style={style.container}>
+      {/* <Card profile={recommendedProfiles[0]}/> */}
       <Swiper
         cards={recommendedProfiles}
         renderCard={(card) => {
@@ -49,7 +49,7 @@ export const HomeScreen = () => {
         stackScale={10}
         stackSeparation={40}
         horizontalThreshold={screenWidth}
-        verticalThreshold={screenHeight/5}
+        verticalThreshold={screenHeight/8}
         outputRotationRange={["-10deg", "0deg", "10deg"]}
         backgroundColor="transparent"
         horizontalSwipe = {false}
