@@ -15,6 +15,11 @@ export const HomeScreenSelectorScreen = ({ navigation }: any) => {
         onPress={() => navigation.navigate("HomeScreen2")}
         title="Home Screen 2"
       />
+
+      <Button
+        onPress={() => navigation.navigate("HomeScreen3")}
+        title="Home Screen 3"
+      />
     </View>
   );
 };

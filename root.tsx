@@ -8,6 +8,8 @@ import { OnboardingScreen } from "./src/pages/OnboardingScreen";
 import { HomeScreenSelectorScreen } from "./src/pages/HomeScreenSelectorScreen";
 import { HomeScreen } from "./src/pages/HomeScreen";
 import CardFlipScreen from "./src/pages/HomePage";
+import HomeScreenButtonVersion from "./src/pages/HomePageButtonVersion/HomeScreenButtonVersion";
+
 import { LandingScreen } from "./src/pages/LandingScreen";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
@@ -48,9 +50,16 @@ export const Root = () => {
       <Stack.Navigator>
         {isLoggedIn ? (
           <>
-            <Stack.Screen name="HomeScreenSelectorScreen" component={HomeScreenSelectorScreen} />
+            <Stack.Screen
+              name="HomeScreenSelectorScreen"
+              component={HomeScreenSelectorScreen}
+            />
             <Stack.Screen name="HomeScreen1" component={HomeScreen} />
             <Stack.Screen name="HomeScreen2" component={CardFlipScreen} />
+            <Stack.Screen
+              name="HomeScreen3"
+              component={HomeScreenButtonVersion}
+            />
           </>
         ) : (
           <>
