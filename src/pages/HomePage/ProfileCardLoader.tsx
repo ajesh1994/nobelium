@@ -1,24 +1,61 @@
-import { StyleSheet, View, Text, Pressable, Button, Image, SafeAreaView } from "react-native";
+import { StyleSheet, View, Text, Pressable, Button, Image, SafeAreaView, Dimensions } from "react-native";
 import { useSharedValue, useAnimatedStyle, interpolate, withTiming, combineTransition } from "react-native-reanimated";
 import Animated from "react-native-reanimated";
-import { useContext } from "react";
+import { useContext, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-//import { user } from "../../mocks/user1";
-import { FlatList, ScrollView } from "react-native-gesture-handler";
+import { user } from "../../mocks/user1";
+import { FlatList, GestureHandlerRootView, ScrollView, TapGestureHandler } from "react-native-gesture-handler";
+
+import Swiper from "react-native-deck-swiper";
 
 export const LoadProfileCards = ({ recommendedProfiles } : { recommendedProfiles:any[] }) => {
-  return recommendedProfiles.map((item, i) => {
-    return (
-        <Animated.View key={i}>
-            <LoadProfileCard profile={item}/>
-        </Animated.View>
-        
-    );
-  });
+
+  const [swipeEnabled, setSwipeEnabled] = useState(true);
+  const setSwipable =  (bool:boolean) => {
+    setSwipeEnabled(bool);
+    console.log('setSwipable called with ' + bool);
+  };
+
+
+  const screenWidth = Dimensions.get('screen').width;
+  const screenHeight = Dimensions.get('screen').height;
+
+  const cardList: any[] = []
+  recommendedProfiles.map(profile => cardList.push(profile))
+
+  const useSwiper:any = useRef();
+  // const handleOnSwipedTop = () => useSwiper.swipeTop();
+
+  return(
+    <Swiper
+          ref={useSwiper}
+          cards={cardList}
+          renderCard={(card) => {
+              return (
+                <LoadProfileCard profile={card} setEnableSwipeFunc={setSwipable} swiperFunc={useSwiper}/>
+              )
+          }}
+          onSwiped={(cardIndex) => {console.log('Current card index: ' + cardIndex)}}
+          onSwipedAll={() => {console.log('All cards swiped')}}
+          cardIndex={0}
+          stackSize= {3}
+          stackScale={10}
+          stackSeparation={40}
+          outputRotationRange={["-10deg", "0deg", "10deg"]}
+          backgroundColor="transparent"
+          horizontalSwipe = {false}
+          horizontalThreshold={screenWidth/2}
+          verticalSwipe = {swipeEnabled}
+          verticalThreshold={screenHeight/8}
+          animateOverlayLabelsOpacity = {true}
+          outputOverlayLabelsOpacityRangeY = {[-0.3,0,0.3]}
+          animateCardOpacity={true}
+        />
+  )
 }
 
-const LoadProfileCard = ({ profile } : { profile:any }) => {
+const LoadProfileCard = ({ profile, setEnableSwipeFunc, swiperFunc } : { profile:any, setEnableSwipeFunc:any, swiperFunc:any }) => {
     const spin = useSharedValue<number>(0); // shared value that represents 0 if the card is facing the front of the card, and 1 if the card is showing the back of the card
 
     const frontStyle = useAnimatedStyle(() => {
@@ -42,6 +79,22 @@ const LoadProfileCard = ({ profile } : { profile:any }) => {
           ],
         };
       }, []);
+      
+      const [lastTap, setLastTap] = useState(0);
+      const handleDoubleTap = () => {
+        const now = Date.now();
+        const DOUBLE_PRESS_DELAY = 300;
+
+        if (lastTap && (now - lastTap) < DOUBLE_PRESS_DELAY) {
+          alert('SUPER LIKED');
+          swiperFunc.current.swipeTop()
+        } else {
+          setLastTap(now);
+        }
+      }
+
+      
+
 
     // const position = React.useRef(new Animated.ValueXY()).current;
     // const panResponder = React.useRef(
@@ -62,64 +115,68 @@ const LoadProfileCard = ({ profile } : { profile:any }) => {
     //     },
     //   }),
     // ).current;
-
-      return (
-        <Animated.View>
-          <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
-            <Animated.View style={[Styles.cardCommon, StylesFrontCard.front, frontStyle]}>
-              <Image source={profile.pictures[0]} style={[Styles.cardCommon, StylesFrontCard.profilePhoto]} />
-              <View style={StylesFrontCard.profileSection}>
-                <Text style={StylesFrontCard.profileName}>
-                  {profile.firstName}, {profile.age}
-                </Text>
-                <Text style={StylesFrontCard.profileCareer}>
-                  {profile.career}
-                </Text>
-              </View>
-            </Animated.View>
-          </Pressable>
-            
+      
+    return (
+      <Animated.View>
+        <Pressable onPress={() => {spin.value = spin.value ? 0 : 1}}>
+          <Animated.View style={[Styles.cardCommon, StylesFrontCard.front, frontStyle]}>
+            <Image source={profile.pictures[0]} style={[Styles.cardCommon, StylesFrontCard.profilePhoto]} />
+            <View style={StylesFrontCard.profileSection}>
+              <Text style={StylesFrontCard.profileName}>
+                {profile.firstName}, {profile.age}
+              </Text>
+              <Text style={StylesFrontCard.profileCareer}>
+                {profile.career}
+              </Text>
+            </View>
+          </Animated.View>
+        </Pressable>
           
-          <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
-            <Animated.View style={[Styles.cardCommon, StylesBackCard.back, backStyle]}>
-              <ScrollView style={Styles.cardCommon}>
-                {/* A second pressable is required inside the scrollview otherwise 
-                the scroll section is not pressable and only the section outside 
-                the scroll section is pressable */}
-                <Pressable onPress={() => (spin.value = spin.value ? 0 : 1)}>
-                  <View style={{flexDirection: 'row'}}>
-                    <View style={StylesBackCard.boxSummary}>
-                      <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Height:{"\n  "}{profile.height}</Text>
-                      <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Education:{"\n  "}{profile.education}</Text>
-                      <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Career:{"\n  "}{profile.career}</Text>
-                    </View>
-                    <View style={StylesBackCard.boxSummary}>
-                      <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Religion:{"\n  "}{profile.religion}</Text>
-                      <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Community:{"\n  "}{profile.community}</Text>
-                      <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Raised:{"\n  "}{profile.raisedIn}</Text>
-                    </View>
+        
+        <Pressable onPress={() => {spin.value = spin.value ? 0 : 1}}>
+          <Animated.View style={[Styles.cardCommon, StylesBackCard.back, backStyle]}>
+            <ScrollView style={Styles.cardCommon}>
+              {/* A second pressable is required inside the scrollview otherwise 
+              the scroll section is not pressable and only the section outside 
+              the scroll section is pressable */}
+              <Pressable onPress={() => 
+                {spin.value = spin.value ? 0 : 1;
+                setEnableSwipeFunc(spin.value===1);
+                handleDoubleTap();}
+              }>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={StylesBackCard.boxSummary}>
+                    <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Height:{"\n  "}{profile.height}</Text>
+                    <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Education:{"\n  "}{profile.education}</Text>
+                    <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Career:{"\n  "}{profile.career}</Text>
                   </View>
-                  <View style={StylesBackCard.box}>
-                    <Text style={StylesBackCard.text}>{profile.aboutme[0]}</Text>
+                  <View style={StylesBackCard.boxSummary}>
+                    <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Religion:{"\n  "}{profile.religion}</Text>
+                    <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Community:{"\n  "}{profile.community}</Text>
+                    <Text style={{margin: 5, fontSize: 20, fontWeight: 'bold'}}>Raised:{"\n  "}{profile.raisedIn}</Text>
                   </View>
-                  <View>
-                    <Image source={profile.pictures[1]} style={StylesBackCard.image} />
-                  </View>
-                  <View style={StylesBackCard.box}>
-                    <Text style={StylesBackCard.text}>{profile.aboutme[1]}</Text>
-                  </View>
-                  <View style={StylesBackCard.box}>
-                    <Text style={StylesBackCard.text}>{profile.aboutme[2]}</Text>
-                  </View>
-                  <View>
-                    <Image source={profile.pictures[2]} style={StylesBackCard.image} />
-                  </View>
-                </Pressable>
-              </ScrollView>
-            </Animated.View>
-          </Pressable>
-        </Animated.View>
-      )
+                </View>
+                <View style={StylesBackCard.box}>
+                  <Text style={StylesBackCard.text}>{profile.aboutme[0]}</Text>
+                </View>
+                <View>
+                  <Image source={profile.pictures[1]} style={StylesBackCard.image} />
+                </View>
+                <View style={StylesBackCard.box}>
+                  <Text style={StylesBackCard.text}>{profile.aboutme[1]}</Text>
+                </View>
+                <View style={StylesBackCard.box}>
+                  <Text style={StylesBackCard.text}>{profile.aboutme[2]}</Text>
+                </View>
+                <View>
+                  <Image source={profile.pictures[2]} style={StylesBackCard.image} />
+                </View>
+              </Pressable>
+            </ScrollView>
+          </Animated.View>
+        </Pressable>
+      </Animated.View>
+    )
 }
 
 

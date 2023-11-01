@@ -48,11 +48,12 @@ export const HomeScreen = () => {
         stackSize= {5}
         stackScale={10}
         stackSeparation={40}
-        horizontalThreshold={screenWidth}
-        verticalThreshold={screenHeight/8}
         outputRotationRange={["-10deg", "0deg", "10deg"]}
         backgroundColor="transparent"
         horizontalSwipe = {false}
+        horizontalThreshold={screenWidth/2}
+        verticalSwipe = {false}
+        verticalThreshold={screenHeight/8}
         animateOverlayLabelsOpacity = {true}
         inputOverlayLabelsOpacityRangeY = {[-screenHeight/4,0,screenHeight/4]}
         outputOverlayLabelsOpacityRangeY = {[-0.3,0,0.3]}
