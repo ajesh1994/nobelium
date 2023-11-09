@@ -12,6 +12,10 @@ export const LandingScreen = ({ navigation }: any) => {
         title="Navigate to register screen"
       />
       <Button
+        onPress={() => navigation.navigate("Register2")}
+        title="Navigate to register screen 2"
+      />
+      <Button
         onPress={() => navigation.navigate("Login")}
         title="Navigate to login screen"
       />

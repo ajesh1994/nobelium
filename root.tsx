@@ -15,6 +15,9 @@ import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
 import { RegistrationNameScreen } from "./src/pages/RegistrationNameScreen";
 import { RegistrationDobScreen } from "./src/pages/RegistrationDobScreen";
 import { RegistrationPictureUploadScreen } from "./src/pages/RegistrationPictureUploadScreen";
+
+import { RegistrationScreen as RegistrationScreen2 } from "./src/pages/Registration/RegistrationPage";
+
 export const Root = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [checking, setIsChecking] = useState(true);
@@ -58,6 +61,7 @@ export const Root = () => {
           <>
             <Stack.Screen name="Landing" component={LandingScreen} />
             <Stack.Screen name="Register" component={RegistrationScreen} />
+            <Stack.Screen name="Register2" component={RegistrationScreen2} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
             <Stack.Screen
