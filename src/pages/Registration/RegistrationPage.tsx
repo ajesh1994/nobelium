@@ -8,7 +8,10 @@ import moment from "moment";
 import {Picker} from '@react-native-picker/picker';
 
 import {careers} from '../../assets/Careers'
+import {locations} from '../../assets/Locations'
 const emptyStringArray : string[]=[];
+
+const towns = Array.from(new Set(locations.map(location => location.town)));
 
 const screenWidth = Dimensions.get('screen').width;
 const screenHeight = Dimensions.get('screen').height;
@@ -28,7 +31,9 @@ export const RegistrationScreen = ({ navigation }: any) => {
     // page 2
     const [career, setCareer] = useState('')
     const [matchingCareer, setMatchingCareer] = useState(emptyStringArray)
-    const [location, setLocation] = useState('')
+    const [locationInputText, setLocationInputText] = useState('')
+    const [matchingLocation, setMatchingLocation] = useState(emptyStringArray)
+    const [locationSelect, setLocationSelect] = useState('')
     
     const fadeInOpacity = useSharedValue(0);
 
@@ -55,14 +60,34 @@ export const RegistrationScreen = ({ navigation }: any) => {
     };
 
     const goNext = async () => { 
-        if (name!='')
+        if (pageNo === 1)
         {
-            fadeOut().start(() => {goToNextPage()});
+            if (name!='')
+            {
+                fadeOut().start(() => {goToNextPage()});
+            }
+            else
+            {
+                alert('Name must be specified');
+            }
         }
-        else
+        else if (pageNo === 2)
         {
-            alert('Name must be specified');
+            if (career ==='')
+            {
+                alert('Career must be specified');
+            }
+            else if (locationSelect ==='')
+            {
+                alert('Location must be specified');
+            }
+            else
+            {
+                fadeOut().start(() => {goToNextPage()});
+                
+            }
         }
+        
     };
 
     const goToBackPage = () => {
@@ -92,10 +117,25 @@ export const RegistrationScreen = ({ navigation }: any) => {
         let filtered = emptyStringArray;
         if (text !== '')
         {
-            filtered = careers.filter(career => career.includes(text));
+            filtered = careers.filter(career => career.toUpperCase().includes(text.toUpperCase()));
         }
         
         setMatchingCareer(filtered);
+    }
+
+    const updateLocationField = (text:string) => {
+        setLocationInputText(text);
+        let filtered = emptyStringArray;
+        if (text === '' || towns.some(item => item.toUpperCase() === text.toUpperCase()))
+        {
+            setLocationSelect(text);
+        }
+        else
+        {
+            setLocationSelect('');
+            filtered = towns.filter(town => town.toUpperCase().includes(text.toUpperCase()));
+        }
+        setMatchingLocation(filtered);
     }
 
     if (pageNo===1)
@@ -106,7 +146,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
                 {/* PAGE 1 */}
                 <Animated.View style={[styles.container, {opacity}]}>
                     <TextInput
-                        style={[styles.textField,{position:'absolute', top:40}]}
+                        style={[styles.textField,{position:'absolute', top:40, borderWidth: (name === '' ? 0 : 2), borderColor: 'green'}]}
                         onChangeText={setName}
                         value={name}
                         placeholder="Name..."
@@ -137,23 +177,44 @@ export const RegistrationScreen = ({ navigation }: any) => {
         return (
             <View style={[styles.container]}>
                 {/* PAGE 2 */}
-                <Animated.View style={[styles.container, {opacity}]}>
-                    <View style={[stylesCareer.container]}>
+                <Animated.View style={[styles.container, { justifyContent:'flex-start'}, {opacity}]}>
+                    <View style={[stylesCareer.container, {marginBottom:100}]}>
                         <TextInput
                             onFocus={() => {updateCareerField(career)}}
                             onSubmitEditing={() => {setCareer(career);setMatchingCareer(emptyStringArray)}}
                             // onBlur={() => {setCareer(career);setMatchingCareer(emptyStringArray)}}
-                            style={[stylesCareer.textField]}
+                            style={[stylesCareer.textField, {borderWidth: (career === '' ? 0 : 2), borderColor: 'green'}]}
                             onChangeText={(text) => updateCareerField(text)}
                             value={career}
                             placeholder="Career..."
                         />
                         <ScrollView style={stylesCareer.filter}>
-                            {matchingCareer.map((career, i) => {
+                            {matchingCareer.map((matchingCareerItem, i) => {
                                 return (
-                                    <TouchableOpacity key={i} onPress={() => {setCareer(career);setMatchingCareer(emptyStringArray)}}>
+                                    <TouchableOpacity key={i} onPress={() => {setCareer(matchingCareerItem);setMatchingCareer(emptyStringArray)}}>
                                         <View style={{backgroundColor:'white', opacity:0.5, borderRadius:1, marginVertical:1}}>
-                                            <Text style={{fontSize:20, padding:10}} numberOfLines={1}>{career}</Text>
+                                            <Text style={{fontSize:20, padding:10}} numberOfLines={1}>{matchingCareerItem}</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            })}
+                        </ScrollView>
+                    </View>
+
+                    <View style={[stylesCareer.container]}>
+                        <TextInput
+                            onFocus={() => {updateLocationField(locationInputText)}}
+                            style={[stylesCareer.textField, {borderWidth: (locationSelect === '' ? 0 : 2), borderColor:'green'}]}
+                            onChangeText={(text) => updateLocationField(text)}
+                            value={locationInputText}
+                            placeholder="Location..."
+                        />
+                        <ScrollView style={stylesCareer.filter}>
+                            {matchingLocation.map((matchingLocationItem, i) => {
+                                return (
+                                    <TouchableOpacity key={i} onPress={() => {setLocationSelect(matchingLocationItem);setLocationInputText(matchingLocationItem);setMatchingLocation(emptyStringArray)}}>
+                                        <View style={{backgroundColor:'white', opacity:0.5, borderRadius:1, marginVertical:1}}>
+                                            <Text style={{fontSize:20, padding:10}} numberOfLines={1}>{matchingLocationItem}</Text>
                                         </View>
                                     </TouchableOpacity>
                                 );
@@ -170,7 +231,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
                             </View>
                         </TouchableOpacity>
                         <View style={[styles.separator]} />
-                        <TouchableOpacity onPress={() => {fadeOut()}}>
+                        <TouchableOpacity onPress={() => {goNext()}}>
                             <View style={[styles.rightHalfNextButton]}>
                                 <Text>NEXT</Text>
                             </View>
@@ -258,9 +319,11 @@ export const RegistrationScreen = ({ navigation }: any) => {
 
     const stylesCareer = StyleSheet.create({
         container: {
-            position: 'absolute',
+            // position: 'absolute',
             top: 40,
-            maxHeight: 600,
+            justifyContent: 'flex-start',
+            alignItems: 'flex-start',
+            maxHeight: 300,
             width: 300,
         },
         textField: {
