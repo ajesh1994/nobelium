@@ -1,6 +1,6 @@
 import { StyleSheet, View, Text, Pressable, Button, Image, TouchableOpacity, TextInput, Dimensions, Animated } from "react-native";
 import { useSharedValue, useAnimatedStyle, interpolate, withTiming, combineTransition } from "react-native-reanimated";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import moment from "moment";
@@ -26,7 +26,18 @@ export const RegistrationScreen = ({ navigation }: any) => {
     // page 1
     const [name, setName] = useState('')
     const [dateOfBirth, setDateOfBirth] = useState(minimumDOB)
-    const [height, setHeight] = useState('')
+    
+    const [heightCentimeterString, setHeightCentimeterString] = useState('')
+    const [heightCentimeter, setHeightCentimeter] = useState(0)
+    const [heightFeetString, setHeightFeetString] = useState('')
+    const [heightFeet, setHeightFeet] = useState(0)
+    const [heightInchesString, setHeightInchesString] = useState('')
+    const [heightInches, setHeightInches] = useState(0)
+    const [heightViewBorderWidth, setHeightViewBorderWidth] = useState(0)
+    const [heightViewBorderColor, setHeightViewBorderColor] = useState('black')
+    const [metricButtonColor, setMetricButtonColor] = useState('green')
+    const [imperialButtonColor, setImperialButtonColor] = useState('white')
+    const [showMetricView, setShowMetricView] = useState(true)
 
     // page 2
     const [career, setCareer] = useState('')
@@ -62,13 +73,17 @@ export const RegistrationScreen = ({ navigation }: any) => {
     const goNext = async () => { 
         if (pageNo === 1)
         {
-            if (name!='')
+            if (name==='')
             {
-                fadeOut().start(() => {goToNextPage()});
+                alert('Name must be specified');
+            }
+            else if (heightCentimeter <= 0)
+            {
+                alert('Height must be specified');
             }
             else
             {
-                alert('Name must be specified');
+                fadeOut().start(() => {goToNextPage()});
             }
         }
         else if (pageNo === 2)
@@ -138,6 +153,107 @@ export const RegistrationScreen = ({ navigation }: any) => {
         setMatchingLocation(filtered);
     }
 
+    const setHeight = (centimeterString:string) => {
+        setHeightCentimeterString(centimeterString);
+        if (centimeterString==='')
+        {
+            setHeightViewBorderWidth(0);
+            setHeightViewBorderColor('black');
+            setHeightCentimeter(0);
+            setHeightFeet(0);
+            setHeightInches(0);
+
+            setHeightFeetString('');
+            setHeightInchesString('');
+            return;
+        }
+        
+        const centimeter = +centimeterString;
+        if (isNaN(centimeter))
+        {
+            setHeightViewBorderWidth(2);
+            setHeightViewBorderColor('red');
+            setHeightCentimeter(0);
+            setHeightFeet(0);
+            setHeightInches(0);
+
+            setHeightFeetString('');
+            setHeightInchesString('');
+        }
+        else
+        {
+            const totalInches = centimeter/2.54;
+            const feet = Math.floor(totalInches/12);
+            const inches = totalInches % 12
+
+            setHeightViewBorderWidth(2);
+            setHeightViewBorderColor('green');
+            setHeightCentimeter(centimeter);
+            setHeightFeet(feet);
+            setHeightInches(inches);
+
+            setHeightFeetString(feet+'');
+            setHeightInchesString(Math.round(inches)+'');
+
+            // console.log('CENTIMETER String: ' + centimeterString + ',CENTIMETER: ' + centimeter + ', TOTAL INCHES: ' + totalInches + ', FEET: ' + heightFeet + ', INCHES: ' + heightInches);
+        }
+    }
+
+    const setHeightImperial = (feetString:string, inchesString:string) => {
+        setHeightFeetString(feetString);
+        setHeightInchesString(inchesString);
+
+        if (feetString==='' && inchesString==='')
+        {
+            setHeightViewBorderWidth(0);
+            setHeightViewBorderColor('black');
+            setHeightCentimeter(0);
+            setHeightFeet(0);
+            setHeightInches(0);
+
+            setHeightCentimeterString('');
+            return;
+        }
+        
+        const feet = +feetString;
+        const inches = +inchesString;
+        if (isNaN(feet) || isNaN(inches))
+        {
+            setHeightViewBorderWidth(2);
+            setHeightViewBorderColor('red');
+            setHeightCentimeter(0);
+            setHeightFeet(0);
+            setHeightInches(0);
+
+            setHeightCentimeterString('');
+        }
+        else
+        {
+            const totalInches = (feet * 12) + inches;
+            const centimeter = totalInches * 2.54;
+
+            setHeightViewBorderWidth(2);
+            setHeightViewBorderColor('green');
+            setHeightCentimeter(centimeter);
+            setHeightFeet(feet);
+            setHeightInches(inches);
+
+            setHeightCentimeterString(centimeter+'');
+        }
+    }
+
+    const metricButtonSelected = () => {
+        setMetricButtonColor('green');
+        setImperialButtonColor('white');
+        setShowMetricView(true);
+    }
+
+    const imperialButtonSelected = () => {
+        setImperialButtonColor('green');
+        setMetricButtonColor('white');
+        setShowMetricView(false);
+    }
+
     if (pageNo===1)
     {
         return (
@@ -151,6 +267,49 @@ export const RegistrationScreen = ({ navigation }: any) => {
                         value={name}
                         placeholder="Name..."
                     />
+
+                    <View style={{flexDirection:'row', justifyContent:'space-evenly', height:100, width:350}}>
+                        <View style={{flexDirection:'row'}}>
+                            {showMetricView ? (
+                                <>
+                                    <TextInput
+                                        style={[stylesHeightComponent.textField,{width:200, borderWidth:heightViewBorderWidth, borderColor:heightViewBorderColor}]}
+                                        onChangeText={(text) => setHeight(text)}
+                                        value={heightCentimeterString}
+                                        placeholder="Height..."
+                                    />
+                                </>
+                            ) : (
+                                <>
+                                    <TextInput
+                                        style={[stylesHeightComponent.textField,{width:95, borderWidth:heightViewBorderWidth, borderColor:heightViewBorderColor, marginRight:5}]}
+                                        onChangeText={(text) => setHeightImperial(text, heightInchesString)}
+                                        value={heightFeetString}
+                                        placeholder="Feet..."
+                                    />
+                                    <TextInput
+                                        style={[stylesHeightComponent.textField,{width:95, borderWidth:heightViewBorderWidth, borderColor:heightViewBorderColor, marginLeft:5}]}
+                                        onChangeText={(text) => setHeightImperial(heightFeetString, text)}
+                                        value={heightInchesString}
+                                        placeholder="Inches..."
+                                    />
+                                </>
+                            )}
+                        </View>
+                        
+                        <View>
+                            <TouchableOpacity onPress={() => {metricButtonSelected()}}>
+                                <View style={[stylesHeightComponent.metric, {backgroundColor:metricButtonColor}]}>
+                                    <Text>Metric</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity onPress={() => {imperialButtonSelected()}}>
+                                <View style={[stylesHeightComponent.metric, {backgroundColor:imperialButtonColor}]}>
+                                    <Text>Imperial</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
                     
                     <DateTimePicker mode="date" maximumDate={minimumDOB} value={minimumDOB} onChange={chooseDate} />
     
@@ -297,6 +456,41 @@ export const RegistrationScreen = ({ navigation }: any) => {
         backgroundColor: 'darksalmon',
     },
     });
+
+    const stylesHeightComponent = StyleSheet.create({
+        textField: {
+            width: 200,
+            height: 100,
+            backgroundColor: 'white',
+            borderRadius: 5,
+            padding: 10,
+            fontSize: 30,
+            textAlign: 'center',
+        },
+        metricButtonComponent: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 100,
+            height: 10,
+            backgroundColor: 'pink',
+            borderRadius: 5,
+        },
+        metric: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 100,
+            height: 50,
+            backgroundColor: 'pink',
+            borderRadius: 5,
+        },
+        separator: {
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: 5,
+            height: 100,
+            backgroundColor: 'darksalmon',
+        },
+        });
 
     const stylesPicker = StyleSheet.create({
         container: {

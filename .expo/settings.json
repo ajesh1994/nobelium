@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": null,
   "https": false,
-  "scheme": "exp+my-app",
+  "scheme": "exp+nobelium-app",
   "devClient": false
 }
