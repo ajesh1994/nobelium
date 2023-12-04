@@ -7,7 +7,7 @@ import { user } from "../../mocks/user1";
 const CardFlip = () => {
     return (
       <GestureHandlerRootView style={{ flex: 1 }}>
-        <View style={styles.container}>
+        <View>
           <HomeScreen profile={user} />
         </View>
       </GestureHandlerRootView>
@@ -16,10 +16,4 @@ const CardFlip = () => {
   
   export default CardFlip;
   
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      alignItems: "center",
-      justifyContent: "center",
-    },
-  });
+

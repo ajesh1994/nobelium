@@ -20,12 +20,18 @@ export const HomeScreen = ({ profile } : { profile:any }) => {
     setIsLoggedIn(false);
   };
 
-  // const recommendedProfiles = [user1, user2, user3, user4, user5]
-  const recommendedProfiles = [user1]
+  const recommendedProfiles = [user1, user2, user3, user4, user5]
+  // const recommendedProfiles = [user1, user2]
   return (
-    <View>
+    <View style={[styles.container]}>
       <LoadProfileCards recommendedProfiles={recommendedProfiles}/>
       <Button onPress={logout} title="LOGOUT" />
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});

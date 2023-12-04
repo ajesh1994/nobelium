@@ -8,6 +8,7 @@ import { OnboardingScreen } from "./src/pages/OnboardingScreen";
 import { HomeScreenSelectorScreen } from "./src/pages/HomeScreenSelectorScreen";
 import { HomeScreen } from "./src/pages/HomeScreen";
 import CardFlipScreen from "./src/pages/HomePage";
+import { HomeScreen as homeScreen2 } from "./src/pages/HomePage2/HomeScreen";
 import { NavigationWrapperButtonV } from "./src/pages/HomePageButtonVersion/NavigationWrapper";
 import { LandingScreen } from "./src/pages/LandingScreen";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
@@ -15,6 +16,9 @@ import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
 import { RegistrationNameScreen } from "./src/pages/RegistrationNameScreen";
 import { RegistrationDobScreen } from "./src/pages/RegistrationDobScreen";
 import { RegistrationPictureUploadScreen } from "./src/pages/RegistrationPictureUploadScreen";
+
+import { RegistrationScreen as RegistrationScreen2 } from "./src/pages/Registration/RegistrationPage";
+
 export const Root = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const [checking, setIsChecking] = useState(true);
@@ -55,8 +59,9 @@ export const Root = () => {
             />
             <Stack.Screen name="HomeScreen1" component={HomeScreen} />
             <Stack.Screen name="HomeScreen2" component={CardFlipScreen} />
+            <Stack.Screen name="HomeScreen3" component={homeScreen2} />
             <Stack.Screen
-              name="HomeScreen3"
+              name="HomeScreen4"
               options={{ headerShown: false }}
               component={NavigationWrapperButtonV}
             />
@@ -65,6 +70,7 @@ export const Root = () => {
           <>
             <Stack.Screen name="Landing" component={LandingScreen} />
             <Stack.Screen name="Register" component={RegistrationScreen} />
+            <Stack.Screen name="Register2" component={RegistrationScreen2} />
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Onboarding" component={OnboardingScreen} />
             <Stack.Screen
