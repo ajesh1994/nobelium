@@ -6,11 +6,17 @@ import {
   TouchableOpacity,
   Text,
   ScrollView,
-  Pressable,
-  Alert,
+  Platform,
+  StatusBar,
 } from "react-native";
 import Animated, { Extrapolation } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
+import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { Picker } from "@react-native-picker/picker";
 
 import CardsSwipe from "react-native-cards-swipe";
 import { user as user1 } from "../../mocks/user1";
@@ -37,12 +43,172 @@ const cardsData = [
   { src: user4.pictures[1] },
 ];
 
-export default function HomeScreenButtonVersion() {
+const TabBottom = createMaterialBottomTabNavigator();
+const TabTop = createMaterialTopTabNavigator();
+const TabDrawer = createDrawerNavigator();
+
+export const TabsNavBotom = ({
+  setNavigationType,
+  navigationType,
+}: {
+  setNavigationType: (type: string) => void;
+  navigationType: string;
+}) => {
+  return (
+    <TabBottom.Navigator>
+      <TabBottom.Screen
+        name="Home"
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home" size={24} color="black" />
+          ),
+        }}
+        component={HomeScreenButtonVersion}
+      />
+      <TabBottom.Screen
+        name="Chat"
+        options={{
+          tabBarLabel: "Chat",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbox" size={24} color="black" />
+          ),
+        }}
+        component={Chat}
+      />
+      <TabBottom.Screen
+        name="Settings"
+        options={{
+          tabBarLabel: "Settings",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="settings" size={24} color="black" />
+          ),
+        }}
+        component={() => Settings(setNavigationType, navigationType)}
+      />
+    </TabBottom.Navigator>
+  );
+};
+
+export const TabsNavTop = ({
+  setNavigationType,
+  navigationType,
+}: {
+  setNavigationType: (type: string) => void;
+  navigationType: string;
+}) => {
+  return (
+    <TabTop.Navigator>
+      <TabTop.Screen
+        name="Home"
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="home" size={24} color="black" />
+          ),
+        }}
+        component={HomeScreenButtonVersion}
+      />
+      <TabTop.Screen
+        name="Chat"
+        options={{
+          tabBarLabel: "Chat",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="chatbox" size={24} color="black" />
+          ),
+        }}
+        component={Chat}
+      />
+      <TabTop.Screen
+        name="Settings"
+        options={{
+          tabBarLabel: "Settings",
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="settings" size={24} color="black" />
+          ),
+        }}
+        component={() => Settings(setNavigationType, navigationType)}
+      />
+    </TabTop.Navigator>
+  );
+};
+
+export const TabsNavDrawer = ({
+  setNavigationType,
+  navigationType,
+}: {
+  setNavigationType: (type: string) => void;
+  navigationType: string;
+}) => {
+  return (
+    <TabDrawer.Navigator>
+      <TabDrawer.Screen
+        name="Home"
+        component={HomeScreenButtonVersion}
+        options={{
+          drawerIcon: () => <Ionicons name="home" size={24} color="black" />,
+        }}
+      />
+      <TabDrawer.Screen
+        name="Chat"
+        component={Chat}
+        options={{
+          drawerIcon: () => <Ionicons name="chatbox" size={24} color="black" />,
+        }}
+      />
+      <TabDrawer.Screen
+        name="Settings"
+        component={() => Settings(setNavigationType, navigationType)}
+        options={{
+          drawerIcon: () => (
+            <Ionicons name="settings" size={24} color="black" />
+          ),
+        }}
+      />
+    </TabDrawer.Navigator>
+  );
+};
+
+function Settings(
+  setNavigationType: (type: string) => void,
+  navigationType: string
+) {
+  return (
+    <View
+      style={{
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      }}
+    >
+      <View style={{ marginTop: 100 }}>
+        <Text>Choose navigation type</Text>
+        <Picker
+          selectedValue={navigationType}
+          onValueChange={(itemValue, itemIndex) => setNavigationType(itemValue)}
+        >
+          <Picker.Item label="Bottom Navigation" value="bottom" />
+          <Picker.Item label="Top Navigation" value="top" />
+          <Picker.Item label="Side Navigation" value="side" />
+        </Picker>
+      </View>
+    </View>
+  );
+}
+
+function Chat() {
+  return (
+    <View
+      style={{
+        paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
+      }}
+    ></View>
+  );
+}
+
+function HomeScreenButtonVersion() {
   Animated.Extrapolate = Extrapolation;
 
   const swiper = useRef<any>(null);
   const [showProfile, setShowProfile] = useState(false);
-  console.log(showProfile);
 
   return (
     <View style={styles.container}>
@@ -142,6 +308,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   pressableContainer: {
     width: "90%",
