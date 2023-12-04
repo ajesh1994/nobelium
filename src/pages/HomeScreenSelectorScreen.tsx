@@ -1,6 +1,3 @@
-import { useContext } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { View, Text, Button, StyleSheet } from "react-native";
 
 export const HomeScreenSelectorScreen = ({ navigation }: any) => {
@@ -18,6 +15,10 @@ export const HomeScreenSelectorScreen = ({ navigation }: any) => {
       <Button
         onPress={() => navigation.navigate("HomeScreen3")}
         title="Home Screen 3"
+      />
+      <Button
+        onPress={() => navigation.navigate("HomeScreen4")}
+        title="Home Screen 4"
       />
     </View>
   );
