@@ -60,6 +60,10 @@ export const HomeScreenSelectorScreen = ({ navigation }: any) => {
           onPress={() => navigation.navigate("HomeScreen5")}
           title="Home Screen Prompt Swipe"
         />
+        <Button
+          onPress={() => navigation.navigate("HomeScreen6")}
+          title="Home Screen Swipe Down"
+        />
       </View>
       <Text style={{ padding: 10 }}>ADD A GOOGLE POLL?</Text>
     </View>

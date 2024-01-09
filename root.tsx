@@ -9,6 +9,7 @@ import { HomeScreenSelectorScreen } from "./src/pages/HomeScreenSelectorScreen";
 import { HomeScreen } from "./src/pages/HomeScreen";
 import CardFlipScreen from "./src/pages/HomePage";
 import { HomeScreen as homeScreen2 } from "./src/pages/HomePage2/HomeScreen";
+import { SwipeDownPage, SwipeDownPage as homeScreen4 } from "./src/pages/SwipeDownPage/index";
 import { NavigationWrapperButtonV } from "./src/pages/HomePageButtonVersion/NavigationWrapper";
 import { LandingScreen } from "./src/pages/LandingScreen";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
@@ -70,6 +71,7 @@ export const Root = () => {
               name="HomeScreen5"
               component={NavigationWrapperPromptV}
             />
+                    <Stack.Screen name="HomeScreen6" component={SwipeDownPage} />
           </>
         ) : (
           <>
