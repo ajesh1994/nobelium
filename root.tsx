@@ -18,6 +18,7 @@ import { RegistrationDobScreen } from "./src/pages/RegistrationDobScreen";
 import { RegistrationPictureUploadScreen } from "./src/pages/RegistrationPictureUploadScreen";
 
 import { RegistrationScreen as RegistrationScreen2 } from "./src/pages/Registration/RegistrationPage";
+import { NavigationWrapperPromptV } from "./src/pages/HomePagePromptVersion/NavigationWrapper";
 
 export const Root = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -54,7 +55,7 @@ export const Root = () => {
         {isLoggedIn ? (
           <>
             <Stack.Screen
-              name="HomeScreenSelectorScreen"
+              name="Home Screen Selector"
               component={HomeScreenSelectorScreen}
             />
             <Stack.Screen name="HomeScreen1" component={HomeScreen} />
@@ -62,8 +63,12 @@ export const Root = () => {
             <Stack.Screen name="HomeScreen3" component={homeScreen2} />
             <Stack.Screen
               name="HomeScreen4"
-              options={{ headerShown: false }}
               component={NavigationWrapperButtonV}
+            />
+
+            <Stack.Screen
+              name="HomeScreen5"
+              component={NavigationWrapperPromptV}
             />
           </>
         ) : (

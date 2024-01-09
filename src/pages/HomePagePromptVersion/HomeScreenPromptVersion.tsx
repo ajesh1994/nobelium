@@ -8,12 +8,16 @@ import {
   ScrollView,
   Platform,
   StatusBar,
+  TouchableHighlight,
+  Button,
+  TextInput,
 } from "react-native";
 import Animated, { Extrapolation } from "react-native-reanimated";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import Modal from "react-native-modal";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { Picker } from "@react-native-picker/picker";
@@ -23,6 +27,7 @@ import { user as user1 } from "../../mocks/user1";
 import { user as user2 } from "../../mocks/user2";
 import { user as user3 } from "../../mocks/user3";
 import { user as user4 } from "../../mocks/user4";
+import { HomeScreenSelectorScreen } from "../HomeScreenSelectorScreen";
 
 const cardsData = [
   { src: user1.pictures[0] },
@@ -64,7 +69,7 @@ export const TabsNavBotom = ({
             <Ionicons name="home" size={24} color="black" />
           ),
         }}
-        component={HomeScreenButtonVersion}
+        component={HomeScreenPromptVersion}
       />
       <TabBottom.Screen
         name="Chat"
@@ -107,7 +112,7 @@ export const TabsNavTop = ({
             <Ionicons name="home" size={24} color="black" />
           ),
         }}
-        component={HomeScreenButtonVersion}
+        component={HomeScreenPromptVersion}
       />
       <TabTop.Screen
         name="Chat"
@@ -144,7 +149,7 @@ export const TabsNavDrawer = ({
     <TabDrawer.Navigator>
       <TabDrawer.Screen
         name="Home"
-        component={HomeScreenButtonVersion}
+        component={HomeScreenPromptVersion}
         options={{
           drawerIcon: () => <Ionicons name="home" size={24} color="black" />,
         }}
@@ -204,80 +209,57 @@ function Chat() {
   );
 }
 
-function HomeScreenButtonVersion() {
-  Animated.Extrapolate = Extrapolation;
-
+function HomeScreenPromptVersion() {
   const swiper = useRef<any>(null);
-  const [showProfile, setShowProfile] = useState(false);
+  Animated.Extrapolate = Extrapolation;
+  const [isVisible, setIsVisible] = useState(false);
+  const [clickedItem, setClickedItem] = useState("photo");
+
+  const [picText, setPicText] = useState("");
 
   return (
     <View style={styles.container}>
-      {showProfile ? (
-        <GestureDetector
-          gesture={Gesture.Tap()
-            .numberOfTaps(2)
-            .onStart(() => {
-              setShowProfile(false);
-            })}
+      <View style={styles.pressableContainer}>
+        <TouchableOpacity
+          style={styles.pressableContainer}
+          onPress={() => {
+            setIsVisible(true);
+            setClickedItem("photo");
+          }}
         >
-          <View style={styles.pressableContainer}>
-            <ScrollView>
-              <View>
-                <Text style={{ margin: 5, fontSize: 20, fontWeight: "bold" }}>
-                  Height:{"\n  "}6ft
-                </Text>
-                <Text style={{ margin: 5, fontSize: 20, fontWeight: "bold" }}>
-                  Education:{"\n  "} I'm so smart
-                </Text>
-                <Text style={{ margin: 5, fontSize: 20, fontWeight: "bold" }}>
-                  Career:{"\n  "}Chef
-                </Text>
+          <CardsSwipe
+            ref={swiper}
+            loop={false}
+            cardContainerStyle={styles.cardContainer}
+            cards={cardsData}
+            renderCard={(card) => (
+              <View style={styles.card}>
+                <Image style={styles.cardImg} source={card.src} />
               </View>
+            )}
+            renderNoMoreCard={() => (
               <View>
-                <Text style={{ margin: 5, fontSize: 20, fontWeight: "bold" }}>
-                  Religion:{"\n  "}N/A
-                </Text>
-                <Text style={{ margin: 5, fontSize: 20, fontWeight: "bold" }}>
-                  Raised:{"\n  "} London
-                </Text>
+                <Text>{"No more Cards!"}</Text>
               </View>
-              <View>
-                <Text style={{ margin: 5, fontSize: 20, fontWeight: "bold" }}>
-                  This is my profile. Here would be some text about me, please
-                  love me hi.
-                </Text>
-              </View>
-            </ScrollView>
-          </View>
-        </GestureDetector>
-      ) : (
-        <GestureDetector
-          gesture={Gesture.Tap()
-            .numberOfTaps(2)
-            .onStart(() => {
-              setShowProfile(true);
-            })}
-        >
-          <View style={styles.pressableContainer}>
-            <CardsSwipe
-              ref={swiper}
-              loop={false}
-              cards={cardsData}
-              cardContainerStyle={styles.cardContainer}
-              renderCard={(card) => (
-                <View style={styles.card}>
-                  <Image style={styles.cardImg} source={card.src} />
-                </View>
-              )}
-              renderNoMoreCard={() => (
-                <View>
-                  <Text>{"No more Cards!"}</Text>
-                </View>
-              )}
-            />
-          </View>
-        </GestureDetector>
-      )}
+            )}
+          />
+        </TouchableOpacity>
+      </View>
+      <TouchableHighlight
+        onPress={() => {
+          setIsVisible(true);
+          setClickedItem("prompt");
+        }}
+      >
+        <View>
+          <Text style={{ fontSize: 30 }}>
+            {"A shower thought I recently had"}
+          </Text>
+          <Text>
+            {"When you say forward or back, your lips move in those directions"}
+          </Text>
+        </View>
+      </TouchableHighlight>
       <View style={styles.controlRow}>
         <TouchableOpacity
           onPress={() => {
@@ -290,18 +272,36 @@ function HomeScreenButtonVersion() {
             style={styles.dislikeIcon}
           />
         </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            if (swiper.current) swiper.current.swipeRight();
-          }}
-          style={[styles.button, styles.rightBtn]}
-        >
-          <Image
-            source={require("../../assets/like.png")}
-            style={styles.likeIcon}
-          />
-        </TouchableOpacity>
       </View>
+      <Modal isVisible={isVisible}>
+        <View
+          style={{ height: 300, display: "flex", backgroundColor: "#D8BFD8" }}
+        >
+          <Text>Like what you see?!</Text>
+          {clickedItem === "photo" ? (
+            <Text>Add something extra about the photo you liked</Text>
+          ) : (
+            <Text>Add some text about the prompt you reacted to</Text>
+          )}
+
+          <TextInput
+            editable
+            onChangeText={(text) => setPicText(text)}
+            value={picText}
+            placeholder="Add Text"
+            multiline
+            style={{ backgroundColor: "white", height: 50 }}
+          />
+          <Button title="Cancel" onPress={() => setIsVisible(false)} />
+          <Button
+            title="Send"
+            onPress={() => {
+              setIsVisible(false);
+              if (swiper.current) swiper.current.swipeRight();
+            }}
+          />
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     paddingTop: Platform.OS === "android" ? StatusBar.currentHeight : 0,
   },
   pressableContainer: {

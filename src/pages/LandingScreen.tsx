@@ -6,26 +6,29 @@ import { View, Text, Button, StyleSheet } from "react-native";
 export const LandingScreen = ({ navigation }: any) => {
   return (
     <View style={styles.container}>
-      <Text>Landing screen</Text>
-      <Button
+      <View style={styles.buttonContainer}>
+        {/* <Button
         onPress={() => navigation.navigate("Register")}
         title="Navigate to register screen"
-      />
-      <Button
-        onPress={() => navigation.navigate("Register2")}
-        title="Navigate to register screen 2"
-      />
-      <Button
-        onPress={() => navigation.navigate("Login")}
-        title="Navigate to login screen"
-      />
+      /> */}
+        <Button
+          onPress={() => navigation.navigate("Register2")}
+          title="Navigate to Registeration Screen"
+        />
+        <Button
+          onPress={() => navigation.navigate("Login")}
+          title="Navigate to Login Screen"
+        />
+      </View>
     </View>
   );
 };
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: {},
+  buttonContainer: {
+    display: "flex",
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-around",
+    height: 300,
   },
 });

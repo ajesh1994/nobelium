@@ -12,7 +12,6 @@ export const LoginScreen = () => {
   };
   return (
     <View style={styles.container}>
-      <Text>Login screen</Text>
       <Button onPress={logInUser} title="Login User" />
     </View>
   );
