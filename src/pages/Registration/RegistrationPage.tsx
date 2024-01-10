@@ -493,7 +493,7 @@ export const RegistrationScreen = ({ navigation }: any) => {
             onFocus={() => setLocationSearchIsFocus(true)}
             onBlur={() => setLocationSearchIsFocus(false)}
             onChange={(item) => {
-              setLocationInputText(item.town);
+              updateLocationField(item.town);
               setLocationSearchIsFocus(false);
             }}
           />
