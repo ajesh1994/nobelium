@@ -10,6 +10,11 @@ import { HomeScreen } from "./src/pages/HomeScreen";
 import CardFlipScreen from "./src/pages/HomePage";
 import { HomeScreen as homeScreen2 } from "./src/pages/HomePage2/HomeScreen";
 import { HomeScreenButtonVersion } from "./src/pages/HomeScreenButtonVersion";
+import {
+  SwipeDownPage,
+  SwipeDownPage as homeScreen4,
+} from "./src/pages/SwipeDownPage/index";
+
 import { LandingScreen } from "./src/pages/LandingScreen";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
@@ -59,6 +64,7 @@ export const Root = () => {
               component={NavigationWrapperButtonV}
               options={{ headerShown: false }}
             />
+            <Stack.Screen name="HomeScreen6" component={SwipeDownPage} />
           </>
         ) : (
           <>
