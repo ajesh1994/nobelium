@@ -19,7 +19,7 @@ import CardFlipScreen from "../HomePage";
 import { HomeScreenPromptVersion } from "../HomeScreenPromptVersion";
 import { HomeScreenButtonVersion } from "../HomeScreenButtonVersion";
 import { HomeScreen as homeScreen2 } from "../HomePage2/HomeScreen";
-
+import { SwipeDownPage } from "../SwipeDownPage/index";
 const TabBottom = createMaterialBottomTabNavigator();
 const TabTop = createMaterialTopTabNavigator();
 const TabDrawer = createDrawerNavigator();
@@ -71,6 +71,10 @@ export const HomeScreenSelectorScreen = ({ navigation }: any) => {
         <Button
           onPress={() => navigation.navigate("HomeScreen3")}
           title="Home Screen 3"
+        />
+        <Button
+          onPress={() => navigation.navigate("HomeScreen6")}
+          title="Home Screen Krish"
         />
         <Button
           onPress={() => navigation.navigate("HomeScreen4")}
@@ -129,6 +133,7 @@ const HomeSelectorStack = () => {
           component={HomeScreenPromptVersion}
           options={{ headerShown: false }}
         />
+        <Stack.Screen name="HomeScreen6" component={SwipeDownPage} />
       </Stack.Navigator>
     </>
   );
