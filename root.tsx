@@ -5,12 +5,16 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { LoginScreen } from "./src/pages/LoginScreen";
 import { RegistrationScreen } from "./src/pages/RegistrationScreen";
 import { OnboardingScreen } from "./src/pages/OnboardingScreen";
-import { HomeScreenSelectorScreen } from "./src/pages/HomeScreenSelectorScreen";
+import { NavigationWrapperButtonV } from "./src/pages/HomeScreenSelector/NavigationWrapper";
 import { HomeScreen } from "./src/pages/HomeScreen";
 import CardFlipScreen from "./src/pages/HomePage";
 import { HomeScreen as homeScreen2 } from "./src/pages/HomePage2/HomeScreen";
-import { SwipeDownPage, SwipeDownPage as homeScreen4 } from "./src/pages/SwipeDownPage/index";
-import { NavigationWrapperButtonV } from "./src/pages/HomePageButtonVersion/NavigationWrapper";
+import { HomeScreenButtonVersion } from "./src/pages/HomeScreenButtonVersion";
+import {
+  SwipeDownPage,
+  SwipeDownPage as homeScreen4,
+} from "./src/pages/SwipeDownPage/index";
+
 import { LandingScreen } from "./src/pages/LandingScreen";
 import { useAsyncStorage } from "@react-native-async-storage/async-storage";
 import { View, StyleSheet, ActivityIndicator, Image } from "react-native";
@@ -19,7 +23,7 @@ import { RegistrationDobScreen } from "./src/pages/RegistrationDobScreen";
 import { RegistrationPictureUploadScreen } from "./src/pages/RegistrationPictureUploadScreen";
 
 import { RegistrationScreen as RegistrationScreen2 } from "./src/pages/Registration/RegistrationPage";
-import { NavigationWrapperPromptV } from "./src/pages/HomePagePromptVersion/NavigationWrapper";
+import { HomeScreenPromptVersion } from "./src/pages/HomeScreenPromptVersion";
 
 export const Root = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -57,21 +61,10 @@ export const Root = () => {
           <>
             <Stack.Screen
               name="Home Screen Selector"
-              component={HomeScreenSelectorScreen}
-            />
-            <Stack.Screen name="HomeScreen1" component={HomeScreen} />
-            <Stack.Screen name="HomeScreen2" component={CardFlipScreen} />
-            <Stack.Screen name="HomeScreen3" component={homeScreen2} />
-            <Stack.Screen
-              name="HomeScreen4"
               component={NavigationWrapperButtonV}
+              options={{ headerShown: false }}
             />
-
-            <Stack.Screen
-              name="HomeScreen5"
-              component={NavigationWrapperPromptV}
-            />
-                    <Stack.Screen name="HomeScreen6" component={SwipeDownPage} />
+            <Stack.Screen name="HomeScreen6" component={SwipeDownPage} />
           </>
         ) : (
           <>

@@ -6,8 +6,12 @@ import { AuthContext } from "../../context/AuthContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { user } from "../../mocks/user1";
 import { FlatList, GestureHandlerRootView, ScrollView, TapGestureHandler } from "react-native-gesture-handler";
+import Modal from "react-native-modal";
 
 import Swiper from "react-native-deck-swiper";
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 export const LoadProfileCards = ({ recommendedProfiles } : { recommendedProfiles:any[] }) => {
 
@@ -17,9 +21,19 @@ export const LoadProfileCards = ({ recommendedProfiles } : { recommendedProfiles
     console.log('setSwipable called with ' + bool);
   };
 
+  const [isFrontOfCardToolTipVisible, setIsFrontOfCardToolTipVisible] = useState(true);
+  const [isBackOfCardToolTipVisible, setIsBackOfCardToolTipVisible] = useState(false);
+  const [firstTimeViewingBackOfCard, setFirstTimeViewingBackOfCard] = useState(true);
+  
+  const setBackOfCardToolTipVisibility = () => {
+    if (firstTimeViewingBackOfCard){
+      setFirstTimeViewingBackOfCard(false);
+      console.log('set firstTimeViewingBackOfCard to false: ' + firstTimeViewingBackOfCard);
+      setIsBackOfCardToolTipVisible(false); // NEED TO CHANGE TO TRUE AFTER FIX
+    }
+  }
 
-  const screenWidth = Dimensions.get('screen').width;
-  const screenHeight = Dimensions.get('screen').height;
+  
 
   const cardList: any[] = []
   recommendedProfiles.map(profile => cardList.push(profile))
@@ -28,34 +42,78 @@ export const LoadProfileCards = ({ recommendedProfiles } : { recommendedProfiles
   // const handleOnSwipedTop = () => useSwiper.swipeTop();
 
   return(
-    <Swiper
-          ref={useSwiper}
-          cards={cardList}
-          renderCard={(card) => {
-              return (
-                <LoadProfileCard profile={card} setEnableSwipeFunc={setSwipable} swiperFunc={useSwiper}/>
-              )
-          }}
-          onSwiped={(cardIndex) => {console.log('Current card index: ' + cardIndex)}}
-          onSwipedAll={() => {console.log('All cards swiped')}}
-          cardIndex={0}
-          stackSize= {3}
-          stackScale={10}
-          stackSeparation={40}
-          outputRotationRange={["-10deg", "0deg", "10deg"]}
-          backgroundColor="transparent"
-          horizontalSwipe = {false}
-          horizontalThreshold={screenWidth/2}
-          verticalSwipe = {swipeEnabled}
-          verticalThreshold={screenHeight/8}
-          animateOverlayLabelsOpacity = {true}
-          outputOverlayLabelsOpacityRangeY = {[-0.3,0,0.3]}
-          animateCardOpacity={true}
-        />
+    <View>
+      <Modal isVisible={isFrontOfCardToolTipVisible}>
+        <View style={{ height: 300, display: "flex", backgroundColor: "#D8BFD8", justifyContent: "space-around"}}>
+          <Text style={{ fontWeight: "bold", alignSelf: "center"}}>
+            Prompt Swiping
+          </Text>
+          <Text style={{ padding: 10 }}>
+            This version works by swiping up and down (a bit like tiktok), and tapping the card to show details about the profile with more photos.
+            Once a card is flipped you can then scroll to view more details.
+          </Text>
+          <Text style={{ alignSelf: "center"}}>
+            Swipe up for LIKE
+          </Text>
+          <Text style={{ alignSelf: "center", color: "red" }}>
+            Swipe down for DISLIKE
+          </Text>
+          <Text style={{ alignSelf: "center", color: "lightgreen" }}>
+            Double tap to SUPERLIKE
+          </Text>
+          <View style={{ width: 300, alignSelf: "center"}}>
+            <Button title="OK" onPress={() => setIsFrontOfCardToolTipVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+      <Modal isVisible={isBackOfCardToolTipVisible}>
+        <View style={{ height: 300, display: "flex", backgroundColor: "#D8BFD8", justifyContent: "space-around"}}>
+          <Text style={{ fontWeight: "bold", alignSelf: "center"}}>
+            Prompt Swiping
+          </Text>
+          <Text style={{ padding: 10 }}>
+            The back of the card contains profile details, up can scroll up and down on this page.
+          </Text>
+          <Text style={{ padding: 10 }}>
+            You cannot swipe up for LIKE or down for DISLIKE, have a think about whether you would also prefer to have a swipping mechanism for LIKE and DISLIKE from the back of the card.
+          </Text>
+          <Text style={{ alignSelf: "center", color: "lightgreen" }}>
+            You can still double tap to SUPERLIKE
+          </Text>
+          <View style={{ width: 300, alignSelf: "center"}}>
+            <Button title="OK" onPress={() => setIsBackOfCardToolTipVisible(false)} />
+          </View>
+        </View>
+      </Modal>
+      <Swiper
+        ref={useSwiper}
+        cards={cardList}
+        renderCard={(card) => {
+            return (
+              <LoadProfileCard profile={card} setEnableSwipeFunc={setSwipable} swiperFunc={useSwiper} setIsBackOfCardToolTipVisibleFunc={setBackOfCardToolTipVisibility}/>
+            )
+        }}
+        onSwiped={(cardIndex) => {console.log('Current card index: ' + cardIndex)}}
+        onSwipedAll={() => {console.log('All cards swiped')}}
+        cardIndex={0}
+        stackSize= {3}
+        stackScale={10}
+        stackSeparation={40}
+        outputRotationRange={["-10deg", "0deg", "10deg"]}
+        backgroundColor="transparent"
+        horizontalSwipe = {false}
+        horizontalThreshold={screenWidth/2}
+        verticalSwipe = {swipeEnabled}
+        verticalThreshold={screenHeight/8}
+        animateOverlayLabelsOpacity = {true}
+        outputOverlayLabelsOpacityRangeY = {[-0.3,0,0.3]}
+        animateCardOpacity={true}
+      />
+    </View>
   )
 }
 
-const LoadProfileCard = ({ profile, setEnableSwipeFunc, swiperFunc } : { profile:any, setEnableSwipeFunc:any, swiperFunc:any }) => {
+const LoadProfileCard = ({ profile, setEnableSwipeFunc, swiperFunc, setIsBackOfCardToolTipVisibleFunc } : { profile:any, setEnableSwipeFunc:any, swiperFunc:any, setIsBackOfCardToolTipVisibleFunc:any }) => {
     const spin = useSharedValue<number>(0); // shared value that represents 0 if the card is facing the front of the card, and 1 if the card is showing the back of the card
 
     const frontStyle = useAnimatedStyle(() => {
@@ -92,7 +150,6 @@ const LoadProfileCard = ({ profile, setEnableSwipeFunc, swiperFunc } : { profile
           setLastTap(now);
         }
       }
-
       
 
 
@@ -142,7 +199,9 @@ const LoadProfileCard = ({ profile, setEnableSwipeFunc, swiperFunc } : { profile
               <Pressable onPress={() => 
                 {spin.value = spin.value ? 0 : 1;
                 setEnableSwipeFunc(spin.value===1);
-                handleDoubleTap();}
+                handleDoubleTap();
+                setIsBackOfCardToolTipVisibleFunc();
+              }
               }>
                 <View style={{flexDirection: 'row'}}>
                   <View style={StylesBackCard.boxSummary}>
@@ -182,11 +241,12 @@ const LoadProfileCard = ({ profile, setEnableSwipeFunc, swiperFunc } : { profile
 
 const Styles = StyleSheet.create({
   cardCommon: {
-    height: 700,
-    width: 400,
+    height: screenHeight*0.7,
+    width: screenWidth*0.9,
     borderRadius: 20,
     // alignItems: "center",
     // justifyContent: "center",
+    alignSelf: "center",
     backfaceVisibility: "hidden",
   },
 });
