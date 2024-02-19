@@ -9,6 +9,8 @@ import {
   TextInput,
   Dimensions,
   Animated,
+  KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import Modal from "react-native-modal";
 
@@ -259,189 +261,198 @@ export const RegistrationScreen = ({ navigation }: any) => {
 
   if (pageNo === 1) {
     return (
-      <View style={[styles.container]}>
-        <Modal isVisible={isVisible}>
-          <View
-            style={{
-              height: 300,
-              display: "flex",
-              backgroundColor: "#D8BFD8",
-              justifyContent: "space-around",
-            }}
-          >
-            <Text
+      <KeyboardAvoidingView
+        style={[styles.container]}
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+      >
+        <ScrollView>
+          <Modal isVisible={isVisible}>
+            <View
               style={{
-                fontWeight: "bold",
-                alignSelf: "center",
+                height: 300,
+                display: "flex",
+                backgroundColor: "#D8BFD8",
+                justifyContent: "space-around",
               }}
             >
-              Thanks for testing this out
-            </Text>
-            <Text style={{ padding: 10 }}>
-              What you see here is a very basic registration flow, nothing is
-              saved so don't worry. When you get past this you can select a
-              swiping mechanism to test. Each version also has a navigation bar,
-              you can change the way it is displayed by clicking "Settings" when
-              you are on a swipe screen. Play around and see which one feels
-              more natural.
-            </Text>
+              <Text
+                style={{
+                  fontWeight: "bold",
+                  alignSelf: "center",
+                }}
+              >
+                Thanks for testing this out
+              </Text>
+              <Text style={{ padding: 10 }}>
+                What you see here is a very basic registration flow, nothing is
+                saved so don't worry. When you get past this you can select a
+                swiping mechanism to test. Each version also has a navigation
+                bar, you can change the way it is displayed by clicking
+                "Settings" when you are on a swipe screen. Play around and see
+                which one feels more natural.
+              </Text>
+
+              <View
+                style={{
+                  width: 300,
+                  alignSelf: "center",
+                }}
+              >
+                <Button title="OK" onPress={() => setIsVisible(false)} />
+              </View>
+            </View>
+          </Modal>
+          {/* PAGE 1 */}
+          <Animated.View
+            style={[styles.container, { opacity, height: screenHeight * 0.7 }]}
+          >
+            <TextInput
+              style={[
+                styles.textField,
+                {
+                  borderWidth: name === "" ? 0 : 2,
+                  borderColor: "green",
+                },
+              ]}
+              onChangeText={setName}
+              value={name}
+              placeholder="Name..."
+              placeholderTextColor="black"
+            />
 
             <View
               style={{
-                width: 300,
-                alignSelf: "center",
+                flexDirection: "row",
+                justifyContent: "space-evenly",
+                height: 100,
+                width: 350,
               }}
             >
-              <Button title="OK" onPress={() => setIsVisible(false)} />
-            </View>
-          </View>
-        </Modal>
-        {/* PAGE 1 */}
-        <Animated.View style={[styles.container, { opacity }]}>
-          <TextInput
-            style={[
-              styles.textField,
-              {
-                borderWidth: name === "" ? 0 : 2,
-                borderColor: "green",
-              },
-            ]}
-            onChangeText={setName}
-            value={name}
-            placeholder="Name..."
-          />
+              <View style={{ flexDirection: "row" }}>
+                {showMetricView ? (
+                  <>
+                    <TextInput
+                      style={[
+                        stylesHeightComponent.textField,
+                        {
+                          width: 200,
+                          borderWidth: heightViewBorderWidth,
+                          borderColor: heightViewBorderColor,
+                        },
+                      ]}
+                      onChangeText={(text) => setHeight(text)}
+                      value={heightCentimeterString}
+                      placeholder="Height..."
+                      placeholderTextColor="black"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <TextInput
+                      style={[
+                        stylesHeightComponent.textField,
+                        {
+                          width: 95,
+                          borderWidth: heightViewBorderWidth,
+                          borderColor: heightViewBorderColor,
+                          marginRight: 5,
+                        },
+                      ]}
+                      onChangeText={(text) =>
+                        setHeightImperial(text, heightInchesString)
+                      }
+                      value={heightFeetString}
+                      placeholder="Feet..."
+                    />
+                    <TextInput
+                      style={[
+                        stylesHeightComponent.textField,
+                        {
+                          width: 95,
+                          borderWidth: heightViewBorderWidth,
+                          borderColor: heightViewBorderColor,
+                          marginLeft: 5,
+                        },
+                      ]}
+                      onChangeText={(text) =>
+                        setHeightImperial(heightFeetString, text)
+                      }
+                      value={heightInchesString}
+                      placeholder="Inches..."
+                    />
+                  </>
+                )}
+              </View>
 
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-              height: 100,
-              width: 350,
-            }}
-          >
-            <View style={{ flexDirection: "row" }}>
-              {showMetricView ? (
-                <>
-                  <TextInput
+              <View>
+                <TouchableOpacity
+                  onPress={() => {
+                    metricButtonSelected();
+                  }}
+                >
+                  <View
                     style={[
-                      stylesHeightComponent.textField,
-                      {
-                        width: 200,
-                        borderWidth: heightViewBorderWidth,
-                        borderColor: heightViewBorderColor,
-                      },
+                      stylesHeightComponent.metric,
+                      { backgroundColor: metricButtonColor },
                     ]}
-                    onChangeText={(text) => setHeight(text)}
-                    value={heightCentimeterString}
-                    placeholder="Height..."
-                  />
-                </>
-              ) : (
-                <>
-                  <TextInput
+                  >
+                    <Text>Metric</Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    imperialButtonSelected();
+                  }}
+                >
+                  <View
                     style={[
-                      stylesHeightComponent.textField,
-                      {
-                        width: 95,
-                        borderWidth: heightViewBorderWidth,
-                        borderColor: heightViewBorderColor,
-                        marginRight: 5,
-                      },
+                      stylesHeightComponent.metric,
+                      { backgroundColor: imperialButtonColor },
                     ]}
-                    onChangeText={(text) =>
-                      setHeightImperial(text, heightInchesString)
-                    }
-                    value={heightFeetString}
-                    placeholder="Feet..."
-                  />
-                  <TextInput
-                    style={[
-                      stylesHeightComponent.textField,
-                      {
-                        width: 95,
-                        borderWidth: heightViewBorderWidth,
-                        borderColor: heightViewBorderColor,
-                        marginLeft: 5,
-                      },
-                    ]}
-                    onChangeText={(text) =>
-                      setHeightImperial(heightFeetString, text)
-                    }
-                    value={heightInchesString}
-                    placeholder="Inches..."
-                  />
-                </>
-              )}
+                  >
+                    <Text>Imperial</Text>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
 
             <View>
+              <Text style={{ fontWeight: "bold", fontSize: 20 }}>
+                Date Of Birth...
+              </Text>
+              <Text>{date.toDateString()}</Text>
+
+              <Button onPress={() => setShow(true)} title="Select DoB" />
+              {show && (
+                <DateTimePicker mode="date" value={date} onChange={onChange} />
+              )}
+            </View>
+
+            {/* Button */}
+            <View style={{ flexDirection: "row", justifyContent: "center" }}>
               <TouchableOpacity
                 onPress={() => {
-                  metricButtonSelected();
+                  goBack();
                 }}
               >
-                <View
-                  style={[
-                    stylesHeightComponent.metric,
-                    { backgroundColor: metricButtonColor },
-                  ]}
-                >
-                  <Text>Metric</Text>
+                <View style={[styles.leftHalfNextButton]}>
+                  <Text>BACK</Text>
                 </View>
               </TouchableOpacity>
+              <View style={[styles.separator]} />
               <TouchableOpacity
                 onPress={() => {
-                  imperialButtonSelected();
+                  goNext();
                 }}
               >
-                <View
-                  style={[
-                    stylesHeightComponent.metric,
-                    { backgroundColor: imperialButtonColor },
-                  ]}
-                >
-                  <Text>Imperial</Text>
+                <View style={[styles.rightHalfNextButton]}>
+                  <Text>NEXT</Text>
                 </View>
               </TouchableOpacity>
             </View>
-          </View>
-
-          <View>
-            <Text style={{ fontWeight: "bold", fontSize: 20 }}>
-              Date Of Birth...
-            </Text>
-            <Text>{date.toDateString()}</Text>
-
-            <Button onPress={() => setShow(true)} title="Select DoB" />
-            {show && (
-              <DateTimePicker mode="date" value={date} onChange={onChange} />
-            )}
-          </View>
-
-          {/* Button */}
-          <View style={{ flexDirection: "row", justifyContent: "center" }}>
-            <TouchableOpacity
-              onPress={() => {
-                goBack();
-              }}
-            >
-              <View style={[styles.leftHalfNextButton]}>
-                <Text>BACK</Text>
-              </View>
-            </TouchableOpacity>
-            <View style={[styles.separator]} />
-            <TouchableOpacity
-              onPress={() => {
-                goNext();
-              }}
-            >
-              <View style={[styles.rightHalfNextButton]}>
-                <Text>NEXT</Text>
-              </View>
-            </TouchableOpacity>
-          </View>
-        </Animated.View>
-      </View>
+          </Animated.View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     );
   } else if (pageNo === 2) {
     return (
@@ -596,9 +607,11 @@ const styles = StyleSheet.create({
   },
   placeholderStyle: {
     fontSize: 16,
+    fontWeight: "bold",
   },
   selectedTextStyle: {
     fontSize: 16,
+    fontWeight: "bold",
   },
   iconStyle: {
     width: 20,
