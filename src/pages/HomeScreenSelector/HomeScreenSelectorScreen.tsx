@@ -66,11 +66,11 @@ export const HomeScreenSelectorScreen = ({ navigation }: any) => {
       <View style={styles.container}>
         <Button
           onPress={() => navigation.navigate("HomeScreen2")}
-          title="Home Screen 2"
+          title="Vertical Swiping"
         />
         <Button
           onPress={() => navigation.navigate("HomeScreen3")}
-          title="Home Screen 3"
+          title="Tinder Swiping"
         />
         <Button
           onPress={() => navigation.navigate("HomeScreen6")}

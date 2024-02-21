@@ -50,8 +50,8 @@ export const HomeScreen = () => {
         stackSeparation={40}
         outputRotationRange={["-10deg", "0deg", "10deg"]}
         backgroundColor="transparent"
-        horizontalSwipe = {false}
-        horizontalThreshold={screenWidth/2}
+        horizontalSwipe = {true}
+        horizontalThreshold={screenWidth/8}
         verticalSwipe = {false}
         verticalThreshold={screenHeight/8}
         animateOverlayLabelsOpacity = {true}
@@ -92,7 +92,7 @@ const style = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 2,
+    borderWidth: 0,
   }
 });
 

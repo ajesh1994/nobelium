@@ -1,6 +1,9 @@
-import { View, Image, StyleSheet, Text, Pressable } from "react-native";
+import { View, Image, StyleSheet, Text, Pressable, Dimensions } from "react-native";
 import Animated, { useSharedValue, useAnimatedStyle, interpolate, withTiming } from "react-native-reanimated";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
+
+const screenWidth = Dimensions.get('screen').width;
+const screenHeight = Dimensions.get('screen').height;
 
 export const Card = ({ profile } : { profile:any }) => {
   const spin = useSharedValue<number>(0); // shared value that represents 0 if the card is facing the front of the card, and 1 if the card is showing the back of the card
@@ -93,8 +96,8 @@ const style = StyleSheet.create({
   container:{
     justifyContent: 'center',
     alignItems: 'center',
-    width: 385,
-    height: 600,
+    width: screenWidth*0.9,
+    height: screenHeight*0.7,
     borderRadius: 20,
     borderWidth: 1,
     borderColor: 'black',
